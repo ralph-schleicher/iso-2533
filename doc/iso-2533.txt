@@ -1,0 +1,275 @@
+ISO-2533
+
+ISO 2533:1975 standard atmosphere.
+
+Includes ISO 2533:1975/Add 1:1985 which provides hypsometrical
+tables, that is geopotential altitude as a function of barometric
+pressure.
+
+Includes ISO 2533:1975/Add 2:1997 which extends the standard
+atmosphere from -2000 m down to -5000 m geopotential altitude.
+
+Since ISO 2533 is intended for use in calculations and design of
+flying vehicles, we use the term ‘altitude’ instead of ‘height’
+or ‘elevation’.
+
+The ISO 2533 standard atmosphere is also known as international
+standard atmosphere (ISA).  The ISO 2533 standard atmosphere is
+equal to the ICAO standard atmosphere.
+
+Non-standard ISA day conditions are usually modeled by adding
+a temperature offset to the ISA day temperature.  All functions
+of the ISO 2533 library are designed in such a way that you can
+calculate air properties for a non-standard temperature.
+
+Air properties are always static quantities unless explicitly
+documented otherwise.
+
+                                                                      [Constant]
+standard-acceleration-of-gravity
+   Standard acceleration of gravity at sea level in meter per square second.
+   
+   Value is 9.80665 m/s².
+
+                                                                      [Constant]
+standard-pressure
+   Standard air pressure at sea level in pascal.
+   
+   Value is 101325 Pa.
+
+                                                                      [Constant]
+standard-temperature
+   Standard air temperature at sea level in kelvin.
+   
+   Value is 288.15 K (15 °C).
+
+                                                                      [Constant]
+standard-density
+   Standard air density at sea level in kilogram per cubic meter.
+   
+   Value is 1.225 kg/m³.
+
+                                                                      [Constant]
+avogadro-constant
+   Avogadro constant in one per mole.
+   
+   Value is 6.02257×10²³ 1/mol.
+   
+   The 2010 CODATA recommended value of this constant is 6.02214129×10²³.
+   However, to reproduce the numerical values defined in ISO 2533 it is
+   required to utilize the value 6.02257×10²³.
+
+                                                                      [Constant]
+molar-gas-constant
+   Molar gas constant in joule per mole kelvin.
+   
+   Value is 8.31432 J/mol/K.
+   
+   The 2010 CODATA recommended value of this constant is 8.3144621.
+   However, to reproduce the numerical values defined in ISO 2533 it
+   is required to utilize the value 8.31432.
+
+                                                                      [Constant]
+molar-mass
+   Molar mass of dry air in kilogram per mole.
+   
+   Value is 0.02896442 kg/mol.
+
+                                                                      [Constant]
+specific-gas-constant
+   Specific gas constant of dry air in joule per kilogram kelvin.
+   
+   Value is 287.05287 J/kg/K.
+
+                                                                      [Constant]
+ratio-of-specific-heats
+   Ratio of specific heats of dry air.
+   
+   Value is 1.4.
+
+                                                                      [Constant]
+earth-radius
+   Radius of the earth in meter.
+   
+   Value is 6356766 m.
+
+                                                                      [Function]
+atm (geopotential-altitude &optional (temperature-offset 0))
+   Calculate air pressure and air temperature as a function of altitude.
+   
+   First argument GEOPOTENTIAL-ALTITUDE is the geopotential altitude in
+    meter.  Use the ‘geopotential-altitude’ or ‘flight-level’ function
+    for calculating the geopotential altitude.
+   Optional second argument TEMPERATURE-OFFSET is the temperature offset
+    for a non-standard day in kelvin.  Default is 0 K.
+   
+   Values are the air pressure in pascal and the air temperature in
+   kelvin.
+
+                                                                      [Function]
+pressure-altitude (pressure)
+   Convert altitude from barometric pressure to geopotential altitude.
+   
+   Argument PRESSURE is the air pressure in pascal.
+   
+   Value is the geopotential altitude in meter.
+   
+   The ‘pressure-altitude’ function is the inverse of the ‘atm’ function.
+
+                                                                      [Function]
+acceleration-of-gravity (geometric-altitude)
+   Calculate acceleration of gravity as a function of altitude.
+   
+   Argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+   
+   Value is the acceleration of gravity in kilogram per square second.
+
+                                                                      [Function]
+geometric-altitude (geopotential-altitude)
+   Convert altitude from geopotential altitude to geometric altitude.
+   
+   Argument GEOPOTENTIAL-ALTITUDE is the geopotential altitude in meter.
+   
+   Value is the geometric altitude in meter.
+
+                                                                      [Function]
+geopotential-altitude (geometric-altitude)
+   Convert altitude from geometric altitude to geopotential altitude.
+   
+   Argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+   
+   Value is the geopotential altitude in meter.
+
+                                                                      [Function]
+flight-level (number)
+   Convert altitude from flight level to geopotential altitude.
+   
+   Argument NUMBER is the flight level in hundreds of feet.
+   
+   Value is the geopotential altitude in meter.
+
+                                                                      [Function]
+density (pressure temperature)
+   Calculate the density of air.
+   
+   First argument PRESSURE is the air pressure in pascal.
+   Second argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the air density in kilogram per cubic meter.
+
+                                                                      [Function]
+specific-weight (geometric-altitude &optional (pressure 0 pressure-supplied-p)
+                                    (temperature 0 temperature-supplied-p))
+   Calculate the specific weight of air.
+   
+   First argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+   Optional second argument PRESSURE is the air pressure in pascal.
+   Optional third argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the specific weight of air in newton per cubic meter.
+   
+   If any of the optional arguments PRESSURE and TEMPERATURE is not
+   supplied, then calculate the air pressure and air temperature as a
+   function of the geometric altitude.
+
+                                                                      [Function]
+pressure-scale-height (geometric-altitude &optional
+                                          (temperature 0
+                                           temperature-supplied-p))
+   Calculate the pressure scale height of air.
+   
+   First argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+   Optional second argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the pressure scale height of air in meter.
+   
+   If optional argument TEMPERATURE is not supplied, then calculate the
+   air temperature as a function of the geometric altitude.
+
+                                                                      [Function]
+number-density (pressure temperature)
+   Calculate the number density of air.
+   
+   First argument PRESSURE is the air pressure in pascal.
+   Second argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the number of air particles per cubic meter.
+
+                                                                      [Function]
+mean-speed (temperature)
+   Calculate the mean speed of an air particle, that is
+   the expected value of the Maxwell speed distribution.
+   
+   Argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the mean speed in meter per second.
+
+                                                                      [Function]
+mean-free-path (pressure temperature)
+   Calculate the mean free path of an air particle.
+   
+   First argument PRESSURE is the air pressure in pascal.
+   Second argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the mean free path of an air particle in meter.
+
+                                                                      [Function]
+collision-frequency (pressure temperature)
+   Calculate the collision frequency of an air particle.
+   
+   First argument PRESSURE is the air pressure in pascal.
+   Second argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the collision frequency of an air particle in hertz.
+
+                                                                      [Function]
+speed-of-sound (temperature)
+   Calculate the speed of sound of air.
+   
+   Argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the speed of sound of air in meter per second.
+
+                                                                      [Function]
+dynamic-viscosity (temperature)
+   Calculate the dynamic viscosity of air.
+   
+   Argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the dynamic viscosity of air in pascal second.
+   
+   The dynamic viscosity µ is calculated from the following empirical
+   formula:
+                     -6  3/2
+             1.458×10   T
+        µ = -----------------
+                T + 110.4
+   
+   where T is the temperature.
+
+                                                                      [Function]
+kinematic-viscosity (pressure temperature)
+   Calculate the kinematic viscosity of air.
+   
+   First argument PRESSURE is the air pressure in pascal.
+   Second argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the kinematic viscosity of air in square meter per second.
+
+                                                                      [Function]
+thermal-conductivity (temperature)
+   Calculate the thermal conductivity of air.
+   
+   Argument TEMPERATURE is the air temperature in kelvin.
+   
+   Value is the thermal conductivity of air in watt per meter kelvin.
+   
+   The thermal conductivity λ is calculated from the following empirical
+   formula:
+                        -3  3/2
+             2.648151×10   T
+        λ = --------------------
+                         -12/T
+             T + 245.4×10
+   
+   where T is the temperature.

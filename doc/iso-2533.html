@@ -1,0 +1,945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>ISO-2533</title>
+  <style type="text/css">
+   *{margin:0;border:0;padding:0}
+   body{color:#000;background-color:#fff;font-family:sans-serif;padding:1em;min-width:46em}
+   a{color:inherit;background-color:transparent;text-decoration:none}
+   table{border-collapse:collapse}
+   div.title{padding:1em}
+   div.subtitle{padding:1em}
+   div.prologue{padding:1em}
+   div.epilogue{padding:1em}
+   span.category{color:#212121;font-style:italic}
+   span.package,span.symbol{color:#212121;font-weight:700;white-space:nowrap}
+   span.lambda-list{color:#616161}
+   span.lambda-list-keyword{color:#388E3C;white-space:nowrap}
+   span.keyword{color:#212121;white-space:nowrap}
+   span.variable{color:#212121;font-style:italic;white-space:nowrap}
+   span.init-form{white-space:nowrap}
+   span.method-specializers{color:#616161}
+   span.method-specializer{color:#212121;white-space:nowrap}
+   span.method-qualifier{color:#212121;white-space:nowrap}
+   div.contents{padding:1em}
+   div.contents-listing{padding:1em}
+   div.contents-listing ul{list-style-type:none}
+   @media all and (min-width:68em){div.contents-listing{column-count:2;column-gap:2em}}
+   div.definition{padding:1em}
+   div.signature{background-color:#F5F5F5;padding:1ex 1em}
+   table.signature td.symbol{text-align:left;vertical-align:baseline;white-space:nowrap;padding-right:.5em}
+   table.signature td.lambda-list{text-align:left;vertical-align:baseline;width:100%}
+   table.signature td.category{text-align:right;vertical-align:baseline;white-space:nowrap;padding-left:1.5em}
+   div.documentation{padding:1em}
+  </style>
+ </head>
+ <body>
+  <div class="title">
+   <h1>ISO-2533</h1>
+  </div>
+  <div class="prologue">
+   <pre>ISO 2533:1975 standard atmosphere.
+
+Includes ISO 2533:1975/Add 1:1985 which provides hypsometrical
+tables, that is geopotential altitude as a function of barometric
+pressure.
+
+Includes ISO 2533:1975/Add 2:1997 which extends the standard
+atmosphere from -2000 m down to -5000 m geopotential altitude.
+
+Since ISO 2533 is intended for use in calculations and design of
+flying vehicles, we use the term ‘altitude’ instead of ‘height’
+or ‘elevation’.
+
+The ISO 2533 standard atmosphere is also known as international
+standard atmosphere (ISA).  The ISO 2533 standard atmosphere is
+equal to the ICAO standard atmosphere.
+
+Non-standard ISA day conditions are usually modeled by adding
+a temperature offset to the ISA day temperature.  All functions
+of the ISO 2533 library are designed in such a way that you can
+calculate air properties for a non-standard temperature.
+
+Air properties are always static quantities unless explicitly
+documented otherwise.</pre>
+  </div>
+  <div class="contents" id="contents">
+   <h2>Contents</h2>
+   <div class="contents-listing">
+    <ul>
+     <li>
+      <a href="#_cb0fa3bd-e619-5d3f-8961-a6b981eaf44a">
+       <span class="category">Constant</span>
+       <span class="symbol">standard-acceleration-of-gravity</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_78799ff6-bb78-5bed-8cfd-5839c967625a">
+       <span class="category">Constant</span>
+       <span class="symbol">standard-pressure</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_4285442b-d949-5d3d-9faa-59f3d837f0c6">
+       <span class="category">Constant</span>
+       <span class="symbol">standard-temperature</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_70163a38-4402-5b3b-9bcc-c2f6a70d2ec0">
+       <span class="category">Constant</span>
+       <span class="symbol">standard-density</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_f06b26bf-6d21-5c26-be6b-c40ff2b7156c">
+       <span class="category">Constant</span>
+       <span class="symbol">avogadro-constant</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_4168e3c9-48cf-5484-98c6-ee60ff06b68e">
+       <span class="category">Constant</span>
+       <span class="symbol">molar-gas-constant</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_a7605bd1-e9b2-5cb1-bf02-39fb27243acc">
+       <span class="category">Constant</span>
+       <span class="symbol">molar-mass</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_81804b6e-542f-5e0e-a09f-9faf2b74feff">
+       <span class="category">Constant</span>
+       <span class="symbol">specific-gas-constant</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_e93a4852-5aaf-5fec-92fe-59f1df0c5e4f">
+       <span class="category">Constant</span>
+       <span class="symbol">ratio-of-specific-heats</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_67a198a4-cbad-512d-8ea2-6ae2c23d1549">
+       <span class="category">Constant</span>
+       <span class="symbol">earth-radius</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_d6fa25ed-4d31-5150-ad3e-7e4f86c5a7b3">
+       <span class="category">Function</span>
+       <span class="symbol">atm</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_5ece3794-77f2-58d7-9566-7cd398638037">
+       <span class="category">Function</span>
+       <span class="symbol">pressure-altitude</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_55acd653-0c59-5670-aac8-a5b86706f747">
+       <span class="category">Function</span>
+       <span class="symbol">acceleration-of-gravity</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_6685b3e0-14a0-5b95-97df-dd52a611cc02">
+       <span class="category">Function</span>
+       <span class="symbol">geometric-altitude</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_c16878a8-9295-56a6-a0d1-aaa54af4e709">
+       <span class="category">Function</span>
+       <span class="symbol">geopotential-altitude</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_0dbc6b0e-0c1a-5474-898b-d52ef9235f85">
+       <span class="category">Function</span>
+       <span class="symbol">flight-level</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_eee506d7-e60e-50ce-9d68-68bd0e723fa6">
+       <span class="category">Function</span>
+       <span class="symbol">density</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_0523bd2d-c37d-58d0-a638-716cde1f8cac">
+       <span class="category">Function</span>
+       <span class="symbol">specific-weight</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_3f93466c-3098-5175-987f-ca7ddf96a53d">
+       <span class="category">Function</span>
+       <span class="symbol">pressure-scale-height</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_c160c725-cb4f-539f-818e-45e225c15f94">
+       <span class="category">Function</span>
+       <span class="symbol">number-density</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_4339bf88-b08c-5f31-9c30-b2f18ca4eb01">
+       <span class="category">Function</span>
+       <span class="symbol">mean-speed</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_bba7f8b0-0be1-579e-ac9e-d5dae408b21c">
+       <span class="category">Function</span>
+       <span class="symbol">mean-free-path</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_fa236a54-351c-52f4-9089-3c16729a08b6">
+       <span class="category">Function</span>
+       <span class="symbol">collision-frequency</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_404231c9-b207-5d20-9510-b7951d828438">
+       <span class="category">Function</span>
+       <span class="symbol">speed-of-sound</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_af0edd4e-022e-5a67-8572-649ae106bf06">
+       <span class="category">Function</span>
+       <span class="symbol">dynamic-viscosity</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_6b9f963c-d47a-5d29-a95f-f772e57573a9">
+       <span class="category">Function</span>
+       <span class="symbol">kinematic-viscosity</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_c44da730-63f6-5bbd-bfc8-14bd838d70ca">
+       <span class="category">Function</span>
+       <span class="symbol">thermal-conductivity</span>
+      </a>
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="dictionary">
+   <div class="definition" id="_cb0fa3bd-e619-5d3f-8961-a6b981eaf44a">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">standard-acceleration-of-gravity</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Standard acceleration of gravity at sea level in meter per square second.
+
+Value is 9.80665 m/s².</pre>
+    </div>
+   </div>
+   <div class="definition" id="_78799ff6-bb78-5bed-8cfd-5839c967625a">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">standard-pressure</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Standard air pressure at sea level in pascal.
+
+Value is 101325 Pa.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_4285442b-d949-5d3d-9faa-59f3d837f0c6">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">standard-temperature</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Standard air temperature at sea level in kelvin.
+
+Value is 288.15 K (15 °C).</pre>
+    </div>
+   </div>
+   <div class="definition" id="_70163a38-4402-5b3b-9bcc-c2f6a70d2ec0">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">standard-density</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Standard air density at sea level in kilogram per cubic meter.
+
+Value is 1.225 kg/m³.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_f06b26bf-6d21-5c26-be6b-c40ff2b7156c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">avogadro-constant</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Avogadro constant in one per mole.
+
+Value is 6.02257×10²³ 1/mol.
+
+The 2010 CODATA recommended value of this constant is 6.02214129×10²³.
+However, to reproduce the numerical values defined in ISO 2533 it is
+required to utilize the value 6.02257×10²³.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_4168e3c9-48cf-5484-98c6-ee60ff06b68e">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">molar-gas-constant</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Molar gas constant in joule per mole kelvin.
+
+Value is 8.31432 J/mol/K.
+
+The 2010 CODATA recommended value of this constant is 8.3144621.
+However, to reproduce the numerical values defined in ISO 2533 it
+is required to utilize the value 8.31432.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_a7605bd1-e9b2-5cb1-bf02-39fb27243acc">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">molar-mass</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Molar mass of dry air in kilogram per mole.
+
+Value is 0.02896442 kg/mol.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_81804b6e-542f-5e0e-a09f-9faf2b74feff">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">specific-gas-constant</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Specific gas constant of dry air in joule per kilogram kelvin.
+
+Value is 287.05287 J/kg/K.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_e93a4852-5aaf-5fec-92fe-59f1df0c5e4f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">ratio-of-specific-heats</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Ratio of specific heats of dry air.
+
+Value is 1.4.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_67a198a4-cbad-512d-8ea2-6ae2c23d1549">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">earth-radius</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Radius of the earth in meter.
+
+Value is 6356766 m.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_d6fa25ed-4d31-5150-ad3e-7e4f86c5a7b3">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">atm</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">geopotential-altitude</span> <span class="lambda-list-keyword">&amp;optional</span> (<span class="variable">temperature-offset</span>&nbsp;<span class="init-form">0</span>))</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate air pressure and air temperature as a function of altitude.
+
+First argument GEOPOTENTIAL-ALTITUDE is the geopotential altitude in
+ meter.  Use the ‘geopotential-altitude’ or ‘flight-level’ function
+ for calculating the geopotential altitude.
+Optional second argument TEMPERATURE-OFFSET is the temperature offset
+ for a non-standard day in kelvin.  Default is 0 K.
+
+Values are the air pressure in pascal and the air temperature in
+kelvin.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_5ece3794-77f2-58d7-9566-7cd398638037">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">pressure-altitude</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">pressure</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Convert altitude from barometric pressure to geopotential altitude.
+
+Argument PRESSURE is the air pressure in pascal.
+
+Value is the geopotential altitude in meter.
+
+The ‘pressure-altitude’ function is the inverse of the ‘atm’ function.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_55acd653-0c59-5670-aac8-a5b86706f747">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">acceleration-of-gravity</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">geometric-altitude</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate acceleration of gravity as a function of altitude.
+
+Argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+
+Value is the acceleration of gravity in kilogram per square second.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_6685b3e0-14a0-5b95-97df-dd52a611cc02">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">geometric-altitude</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">geopotential-altitude</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Convert altitude from geopotential altitude to geometric altitude.
+
+Argument GEOPOTENTIAL-ALTITUDE is the geopotential altitude in meter.
+
+Value is the geometric altitude in meter.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c16878a8-9295-56a6-a0d1-aaa54af4e709">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">geopotential-altitude</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">geometric-altitude</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Convert altitude from geometric altitude to geopotential altitude.
+
+Argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+
+Value is the geopotential altitude in meter.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0dbc6b0e-0c1a-5474-898b-d52ef9235f85">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">flight-level</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">number</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Convert altitude from flight level to geopotential altitude.
+
+Argument NUMBER is the flight level in hundreds of feet.
+
+Value is the geopotential altitude in meter.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_eee506d7-e60e-50ce-9d68-68bd0e723fa6">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">density</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">pressure</span> <span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the density of air.
+
+First argument PRESSURE is the air pressure in pascal.
+Second argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the air density in kilogram per cubic meter.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0523bd2d-c37d-58d0-a638-716cde1f8cac">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">specific-weight</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">geometric-altitude</span> <span class="lambda-list-keyword">&amp;optional</span> (<span class="variable">pressure</span>&nbsp;<span class="init-form">0</span>) (<span class="variable">temperature</span>&nbsp;<span class="init-form">0</span>))</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the specific weight of air.
+
+First argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+Optional second argument PRESSURE is the air pressure in pascal.
+Optional third argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the specific weight of air in newton per cubic meter.
+
+If any of the optional arguments PRESSURE and TEMPERATURE is not
+supplied, then calculate the air pressure and air temperature as a
+function of the geometric altitude.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_3f93466c-3098-5175-987f-ca7ddf96a53d">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">pressure-scale-height</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">geometric-altitude</span> <span class="lambda-list-keyword">&amp;optional</span> (<span class="variable">temperature</span>&nbsp;<span class="init-form">0</span>))</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the pressure scale height of air.
+
+First argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
+Optional second argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the pressure scale height of air in meter.
+
+If optional argument TEMPERATURE is not supplied, then calculate the
+air temperature as a function of the geometric altitude.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c160c725-cb4f-539f-818e-45e225c15f94">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">number-density</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">pressure</span> <span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the number density of air.
+
+First argument PRESSURE is the air pressure in pascal.
+Second argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the number of air particles per cubic meter.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_4339bf88-b08c-5f31-9c30-b2f18ca4eb01">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">mean-speed</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the mean speed of an air particle, that is
+the expected value of the Maxwell speed distribution.
+
+Argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the mean speed in meter per second.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_bba7f8b0-0be1-579e-ac9e-d5dae408b21c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">mean-free-path</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">pressure</span> <span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the mean free path of an air particle.
+
+First argument PRESSURE is the air pressure in pascal.
+Second argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the mean free path of an air particle in meter.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_fa236a54-351c-52f4-9089-3c16729a08b6">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">collision-frequency</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">pressure</span> <span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the collision frequency of an air particle.
+
+First argument PRESSURE is the air pressure in pascal.
+Second argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the collision frequency of an air particle in hertz.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_404231c9-b207-5d20-9510-b7951d828438">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">speed-of-sound</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the speed of sound of air.
+
+Argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the speed of sound of air in meter per second.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_af0edd4e-022e-5a67-8572-649ae106bf06">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">dynamic-viscosity</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the dynamic viscosity of air.
+
+Argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the dynamic viscosity of air in pascal second.
+
+The dynamic viscosity µ is calculated from the following empirical
+formula:
+                  -6  3/2
+          1.458×10   T
+     µ = -----------------
+             T + 110.4
+
+where T is the temperature.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_6b9f963c-d47a-5d29-a95f-f772e57573a9">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">kinematic-viscosity</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">pressure</span> <span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the kinematic viscosity of air.
+
+First argument PRESSURE is the air pressure in pascal.
+Second argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the kinematic viscosity of air in square meter per second.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c44da730-63f6-5bbd-bfc8-14bd838d70ca">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">thermal-conductivity</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">temperature</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Calculate the thermal conductivity of air.
+
+Argument TEMPERATURE is the air temperature in kelvin.
+
+Value is the thermal conductivity of air in watt per meter kelvin.
+
+The thermal conductivity λ is calculated from the following empirical
+formula:
+                     -3  3/2
+          2.648151×10   T
+     λ = --------------------
+                      -12/T
+          T + 245.4×10
+
+where T is the temperature.</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

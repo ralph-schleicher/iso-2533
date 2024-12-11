@@ -42,7 +42,7 @@
   :version "1.0"
   :depends-on (:iterate)
   :serial t
-  :components ((:file "package")
+  :components ((:file "packages")
 	       (:file "iso-2533")))
 
 ;;; iso-2533.asd ends here

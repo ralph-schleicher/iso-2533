@@ -1,4 +1,4 @@
-;;; package.lisp --- international standard atmosphere.
+;;; packages.lisp --- international standard atmosphere.
 
 ;; Copyright (C) 2014 Ralph Schleicher
 
@@ -103,4 +103,4 @@ Argument Z has to be a number."
   (declare (type number z))
   (* z z))
 
-;;; package.lisp ends here
+;;; packages.lisp ends here

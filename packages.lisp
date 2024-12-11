@@ -1,4 +1,4 @@
-;;; packages.lisp --- international standard atmosphere.
+;;; packages.lisp --- international standard atmosphere
 
 ;; Copyright (C) 2014 Ralph Schleicher
 

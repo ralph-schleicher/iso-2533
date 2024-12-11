@@ -1,4 +1,4 @@
-;;; iso-2533.asd --- international standard atmosphere.
+;;; iso-2533.asd --- international standard atmosphere
 
 ;; Copyright (C) 2014 Ralph Schleicher
 

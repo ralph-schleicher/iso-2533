@@ -1,4 +1,4 @@
-;;; packages.lisp --- package definitions
+;;; common.lisp --- common definitions
 
 ;; Copyright (C) 2014 Ralph Schleicher
 
@@ -33,40 +33,38 @@
 
 ;;; Code:
 
-(in-package :common-lisp-user)
+(in-package :iso-2533)
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (pushnew :iso-2533-derived-quantities *features*))
+(defmacro defconst (name value &optional doc)
+  "Define a constant variable.
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (pushnew :iso-2533-addendum-2 *features*))
+This is like ‘defconstant’ except that the initially set value
+is reused when the ‘defconst’ form is evaluated again."
+  `(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
+     ,@(when doc (list doc))))
 
-(defpackage :iso-2533
-  (:use :common-lisp
-	:iterate)
-  (:documentation "ISO 2533:1975 standard atmosphere.
+(defmacro defsubst (name arg-list &body body)
+  "Define an inline function.
 
-Includes ISO 2533:1975/Add 1:1985 which provides hypsometrical
-tables, that is geopotential altitude as a function of barometric
-pressure.
+This is like ‘defun’ except that the function is globally marked
+for inline expansion by the compiler."
+  `(progn
+     (declaim (inline ,name))
+     (defun ,name ,arg-list
+       ,@body)))
 
-Includes ISO 2533:1975/Add 2:1997 which extends the standard
-atmosphere from -2000 m down to -5000 m geopotential altitude.
+(defun ensure-type (object type)
+  "Signal a type error if OBJECT is not of the type TYPE.
+Otherwise, return OBJECT."
+  (if (typep object type)
+      object
+    (error (make-condition 'type-error :datum object :expected-type type))))
 
-Since ISO 2533 is intended for use in calculations and design of
-flying vehicles, we use the term ‘altitude’ instead of ‘height’
-or ‘elevation’.
+(defsubst square (z)
+  "Return Z squared, that is Z raised to the power two.
 
-The ISO 2533 standard atmosphere is also known as international
-standard atmosphere (ISA).  The ISO 2533 standard atmosphere is
-equal to the ICAO standard atmosphere.
+Argument Z has to be a number."
+  (declare (type number z))
+  (* z z))
 
-Non-standard ISA day conditions are usually modeled by adding
-a temperature offset to the ISA day temperature.  All functions
-of the ISO 2533 library are designed in such a way that you can
-calculate air properties for a non-standard temperature.
-
-Air properties are always static quantities unless explicitly
-documented otherwise."))
-
-;;; packages.lisp ends here
+;;; common.lisp ends here

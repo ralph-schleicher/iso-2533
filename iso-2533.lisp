@@ -42,31 +42,26 @@
   ;; True means to derive constant quantities via equations.
   (define-symbol-macro derived-quantities (progn #+iso-2533-derived-quantities t))
 
-  (export 'standard-acceleration-of-gravity)
   (defconst standard-acceleration-of-gravity 9.80665
     "Standard acceleration of gravity at sea level in meter per square second.
 
 Value is 9.80665 m/s².")
 
-  (export 'standard-pressure)
   (defconst standard-pressure 101325.0
     "Standard air pressure at sea level in pascal.
 
 Value is 101325 Pa.")
 
-  (export 'standard-temperature)
   (defconst standard-temperature 288.15
     "Standard air temperature at sea level in kelvin.
 
 Value is 288.15 K (15 °C).")
 
-  (export 'standard-density)
   (defconst standard-density 1.225
     "Standard air density at sea level in kilogram per cubic meter.
 
 Value is 1.225 kg/m³.")
 
-  (export 'avogadro-constant)
   (defconst avogadro-constant 6.02257E+23
     "Avogadro constant in one per mole.
 
@@ -76,7 +71,6 @@ The 2010 CODATA recommended value of this constant is 6.02214129×10²³.
 However, to reproduce the numerical values defined in ISO 2533 it is
 required to utilize the value 6.02257×10²³.")
 
-  (export 'molar-gas-constant)
   (defconst molar-gas-constant 8.31432
     "Molar gas constant in joule per mole kelvin.
 
@@ -86,7 +80,6 @@ The 2010 CODATA recommended value of this constant is 8.3144621.
 However, to reproduce the numerical values defined in ISO 2533 it
 is required to utilize the value 8.31432.")
 
-  (export 'molar-mass)
   ;; Quote from ISO 2533: Air molar mass at sea level, as
   ;; obtained from the perfect gas law (2) when introducing
   ;; the adopted values pₙ, ρₙ, Tₙ, R*.
@@ -100,7 +93,6 @@ is required to utilize the value 8.31432.")
 
 Value is 0.02896442 kg/mol.")
 
-  (export 'specific-gas-constant)
   (defconst specific-gas-constant (if derived-quantities
 				      (/ molar-gas-constant
 					 molar-mass)
@@ -108,7 +100,7 @@ Value is 0.02896442 kg/mol.")
     "Specific gas constant of dry air in joule per kilogram kelvin.
 
 Value is 287.05287 J/kg/K.")
-  #-(and)
+  #+()
   (and (= (coerce (* (/ (* 28815/100
 			   1225/1000)
 			101325)
@@ -128,13 +120,11 @@ Value is 287.05287 J/kg/K.")
 	  (/ molar-gas-constant
 	     molar-mass)))
 
-  (export 'ratio-of-specific-heats)
   (defconst ratio-of-specific-heats 1.4
     "Ratio of specific heats of dry air.
 
 Value is 1.4.")
 
-  (export 'earth-radius)
   (defconst earth-radius 6356766.0
     "Radius of the earth in meter.
 
@@ -202,10 +192,10 @@ Value is the ratio of the air pressure to the air pressure at base level."
 						(* pn (p/pb Hb Hn Tn Ln))
 					      (/ pn (p/pb Hn Hb Tb L)))))))
 				(make-instance 'layer
-				  :altitude Hb
-				  :pressure pb
-				  :temperature Tb
-				  :lapse-rate L))))
+				               :altitude Hb
+				               :pressure pb
+				               :temperature Tb
+				               :lapse-rate L))))
 		     (let (b (n (make-layer     0.0 288.15 -0.0065)))
 		       (vector
 			#+iso-2533-addendum-2

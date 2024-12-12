@@ -46,4 +46,12 @@
 	       (:file "common")
 	       (:file "iso-2533")))
 
+(defsystem "iso-2533/tables"
+  :description "International standard atmosphere."
+  :author "Ralph Schleicher <rs@ralph-schleicher.de>"
+  :license "Modified BSD License"
+  :depends-on ("iterate" "named-readtables" "iso-2533")
+  :serial t
+  :components ((:file "tables")))
+
 ;;; iso-2533.asd ends here

@@ -269,7 +269,6 @@ Argument P is the air pressure in pascal."
 		      (finally
 		       (return last-layer-index)))))
 
-(export 'atm)
 (defun atm (geopotential-altitude &optional (temperature-offset 0))
   "Calculate air pressure and air temperature as a function of altitude.
 
@@ -294,7 +293,6 @@ kelvin."
        (+ Tb (* L (- H Hb)) temperature-offset)
        ))))
 
-(export 'pressure-altitude)
 (defun pressure-altitude (pressure)
   "Convert altitude from barometric pressure to geopotential altitude.
 
@@ -317,7 +315,6 @@ The ‘pressure-altitude’ function is the inverse of the ‘atm’ function."
 	     (+ Hb (* (/ Tb L) (- (exp (- (* (/ (* L R) gn) (log (/ p pb))))) 1)))
 	     )))))
 
-(export 'acceleration-of-gravity)
 (defun acceleration-of-gravity (geometric-altitude)
   "Calculate acceleration of gravity as a function of altitude.
 
@@ -326,7 +323,6 @@ Argument GEOMETRIC-ALTITUDE is the geometric altitude in meter.
 Value is the acceleration of gravity in kilogram per square second."
   (* gn (square (/ earth-radius (+ earth-radius geometric-altitude)))))
 
-(export 'geometric-altitude)
 (defun geometric-altitude (geopotential-altitude)
   "Convert altitude from geopotential altitude to geometric altitude.
 
@@ -336,7 +332,6 @@ Value is the geometric altitude in meter."
   (/ (* earth-radius geopotential-altitude)
      (- earth-radius geopotential-altitude)))
 
-(export 'geopotential-altitude)
 (defun geopotential-altitude (geometric-altitude)
   "Convert altitude from geometric altitude to geopotential altitude.
 
@@ -346,7 +341,6 @@ Value is the geopotential altitude in meter."
   (/ (* earth-radius geometric-altitude)
      (+ earth-radius geometric-altitude)))
 
-(export 'flight-level)
 (defun flight-level (number)
   "Convert altitude from flight level to geopotential altitude.
 
@@ -355,7 +349,6 @@ Argument NUMBER is the flight level in hundreds of feet.
 Value is the geopotential altitude in meter."
   (* number 30.48))
 
-(export 'density)
 (defun density (pressure temperature)
   "Calculate the density of air.
 
@@ -365,7 +358,6 @@ Second argument TEMPERATURE is the air temperature in kelvin.
 Value is the air density in kilogram per cubic meter."
   (/ pressure (* R temperature)))
 
-(export 'specific-weight)
 (defun specific-weight (geometric-altitude &optional (pressure 0 pressure-supplied-p) (temperature 0 temperature-supplied-p))
   "Calculate the specific weight of air.
 
@@ -384,7 +376,6 @@ function of the geometric altitude."
   (* (acceleration-of-gravity geometric-altitude)
      (density pressure temperature)))
 
-(export 'pressure-scale-height)
 (defun pressure-scale-height (geometric-altitude &optional (temperature 0 temperature-supplied-p))
   "Calculate the pressure scale height of air.
 
@@ -401,7 +392,6 @@ air temperature as a function of the geometric altitude."
 	(atm (geopotential-altitude geometric-altitude)))))
   (/ (* R temperature) (acceleration-of-gravity geometric-altitude)))
 
-(export 'number-density)
 (defun number-density (pressure temperature)
   "Calculate the number density of air.
 
@@ -412,7 +402,6 @@ Value is the number of air particles per cubic meter."
   (/ (* NA pressure)
      (* R* temperature)))
 
-(export 'mean-speed)
 (defun mean-speed (temperature)
   "Calculate the mean speed of an air particle, that is
 the expected value of the Maxwell speed distribution.
@@ -422,7 +411,6 @@ Argument TEMPERATURE is the air temperature in kelvin.
 Value is the mean speed in meter per second."
   (* #.(sqrt (/ 8 pi)) (sqrt (* R temperature))))
 
-(export 'mean-free-path)
 (defun mean-free-path (pressure temperature)
   "Calculate the mean free path of an air particle.
 
@@ -433,7 +421,6 @@ Value is the mean free path of an air particle in meter."
   (* #.(/ R* (* (sqrt 2.0) pi NA (square sigma)))
      (/ temperature pressure)))
 
-(export 'collision-frequency)
 (defun collision-frequency (pressure temperature)
   "Calculate the collision frequency of an air particle.
 
@@ -444,7 +431,6 @@ Value is the collision frequency of an air particle in hertz."
   (* #.(* 4 NA (square sigma) (sqrt (/ pi (* R* M))))
      (/ pressure (sqrt temperature))))
 
-(export 'speed-of-sound)
 (defun speed-of-sound (temperature)
   "Calculate the speed of sound of air.
 
@@ -453,7 +439,6 @@ Argument TEMPERATURE is the air temperature in kelvin.
 Value is the speed of sound of air in meter per second."
   (sqrt (* gamma R temperature)))
 
-(export 'dynamic-viscosity)
 (defun dynamic-viscosity (temperature)
   "Calculate the dynamic viscosity of air.
 
@@ -472,7 +457,6 @@ where T is the temperature."
   (/ (* 1.458E-6 (expt temperature 3/2))
      (+ temperature 110.4)))
 
-(export 'kinematic-viscosity)
 (defun kinematic-viscosity (pressure temperature)
   "Calculate the kinematic viscosity of air.
 
@@ -483,7 +467,6 @@ Value is the kinematic viscosity of air in square meter per second."
   (/ (dynamic-viscosity temperature)
      (density pressure temperature)))
 
-(export 'thermal-conductivity)
 (defun thermal-conductivity (temperature)
   "Calculate the thermal conductivity of air.
 

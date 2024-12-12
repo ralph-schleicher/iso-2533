@@ -41,9 +41,39 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew :iso-2533-addendum-2 *features*))
 
-(defpackage :iso-2533
+(defpackage #:de.ralph-schleicher.iso-2533
+  (:nicknames :iso-2533)
   (:use :common-lisp
 	:iterate)
+  (:export
+   ;; iso-2533.lisp
+   #:standard-acceleration-of-gravity
+   #:standard-pressure
+   #:standard-temperature
+   #:standard-density
+   #:avogadro-constant
+   #:molar-gas-constant
+   #:molar-mass
+   #:specific-gas-constant
+   #:ratio-of-specific-heats
+   #:earth-radius
+   #:atm
+   #:pressure-altitude
+   #:acceleration-of-gravity
+   #:geometric-altitude
+   #:geopotential-altitude
+   #:flight-level
+   #:density
+   #:specific-weight
+   #:pressure-scale-height
+   #:number-density
+   #:mean-speed
+   #:mean-free-path
+   #:collision-frequency
+   #:speed-of-sound
+   #:dynamic-viscosity
+   #:kinematic-viscosity
+   #:thermal-conductivity)
   (:documentation "ISO 2533:1975 standard atmosphere.
 
 Includes ISO 2533:1975/Add 1:1985 which provides hypsometrical

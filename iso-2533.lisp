@@ -39,8 +39,6 @@
   (setf *read-default-float-format* 'double-float))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  ;; True means to derive constant quantities via equations.
-  (define-symbol-macro derived-quantities (progn #+iso-2533-derived-quantities t))
 
   (defconst standard-acceleration-of-gravity 9.80665
     "Standard acceleration of gravity at sea level in meter per square second.
@@ -67,35 +65,39 @@ Value is 1.225 kg/m³.")
 
 Value is 6.02257×10²³ 1/mol.
 
-The 2010 CODATA recommended value of this constant is 6.02214129×10²³.
-However, to reproduce the numerical values defined in ISO 2533 it is
-required to utilize the value 6.02257×10²³.")
+The CODATA recommended value of this constant is 6.02214076×10²³.
+However, to reproduce the numerical values defined in ISO 2533 it
+is required to utilize the value 6.02257×10²³.")
 
   (defconst molar-gas-constant 8.31432
     "Molar gas constant in joule per mole kelvin.
 
 Value is 8.31432 J/mol/K.
 
-The 2010 CODATA recommended value of this constant is 8.3144621.
+The CODATA recommended value of this constant is 8.314462618...
 However, to reproduce the numerical values defined in ISO 2533 it
 is required to utilize the value 8.31432.")
 
   ;; Quote from ISO 2533: Air molar mass at sea level, as
   ;; obtained from the perfect gas law (2) when introducing
   ;; the adopted values pₙ, ρₙ, Tₙ, R*.
-  (defconst molar-mass (if derived-quantities
-			   (* (/ (* standard-temperature
-				    standard-density)
-				 standard-pressure)
-			      molar-gas-constant)
-			 0.02896442)
+  (defconst molar-mass (progn
+                         #+iso-2533-derived-quantities
+                         (* (/ (* standard-temperature
+	                          standard-density)
+	                       standard-pressure)
+                            molar-gas-constant)
+                         #-iso-2533-derived-quantities
+                         0.02896442)
     "Molar mass of dry air in kilogram per mole.
 
 Value is 0.02896442 kg/mol.")
 
-  (defconst specific-gas-constant (if derived-quantities
-				      (/ molar-gas-constant
-					 molar-mass)
+  (defconst specific-gas-constant (progn
+                                    #+iso-2533-derived-quantities
+				    (/ molar-gas-constant
+				       molar-mass)
+                                    #-iso-2533-derived-quantities
 				    287.05287)
     "Specific gas constant of dry air in joule per kilogram kelvin.
 
@@ -376,7 +378,8 @@ Value is the pressure scale height of air in meter.
 
 If optional argument TEMPERATURE is not supplied, then calculate the
 air temperature as a function of the geometric altitude."
-  (let (pressure)
+  (let ((pressure 0))
+    (declare (ignorable pressure))
     (unless temperature-supplied-p
       (multiple-value-setq (pressure temperature)
 	(atm (geopotential-altitude geometric-altitude)))))

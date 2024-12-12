@@ -1,4 +1,4 @@
-;;; iso-2533.asd --- international standard atmosphere
+;;; iso-2533.asd --- ASDF system definitions
 
 ;; Copyright (C) 2014 Ralph Schleicher
 
@@ -33,16 +33,17 @@
 
 ;;; Code:
 
-(in-package :common-lisp-user)
+(in-package :asdf-user)
 
-(asdf:defsystem :iso-2533
+(defsystem "iso-2533"
   :description "International standard atmosphere."
   :author "Ralph Schleicher <rs@ralph-schleicher.de>"
   :license "Modified BSD License"
-  :version "1.0"
-  :depends-on (:iterate)
+  :version (:read-file-line "VERSION")
+  :depends-on ("iterate")
   :serial t
   :components ((:file "packages")
+	       (:file "common")
 	       (:file "iso-2533")))
 
 ;;; iso-2533.asd ends here

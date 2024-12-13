@@ -43,35 +43,35 @@
 (let ((data (gather-doc
              :package :iso-2533
              :symbols '(iso-2533:standard-acceleration-of-gravity
-		        iso-2533:standard-pressure
-		        iso-2533:standard-temperature
-		        iso-2533:standard-density
-		        iso-2533:avogadro-constant
-		        iso-2533:molar-gas-constant
-		        iso-2533:molar-mass
-		        iso-2533:specific-gas-constant
-		        iso-2533:ratio-of-specific-heats
-		        iso-2533:earth-radius
-		        iso-2533:atm
-		        iso-2533:pressure-altitude
-		        iso-2533:acceleration-of-gravity
-		        iso-2533:geometric-altitude
-		        iso-2533:geopotential-altitude
-		        iso-2533:flight-level
-		        iso-2533:density
-		        iso-2533:specific-weight
-		        iso-2533:pressure-scale-height
-		        iso-2533:number-density
-		        iso-2533:mean-speed
-		        iso-2533:mean-free-path
-		        iso-2533:collision-frequency
-		        iso-2533:speed-of-sound
-		        iso-2533:dynamic-viscosity
-		        iso-2533:kinematic-viscosity
-		        iso-2533:thermal-conductivity)))
+                        iso-2533:standard-pressure
+                        iso-2533:standard-temperature
+                        iso-2533:standard-density
+                        iso-2533:avogadro-constant
+                        iso-2533:molar-gas-constant
+                        iso-2533:molar-mass
+                        iso-2533:specific-gas-constant
+                        iso-2533:ratio-of-specific-heats
+                        iso-2533:earth-radius
+                        iso-2533:atm
+                        iso-2533:pressure-altitude
+                        iso-2533:acceleration-of-gravity
+                        iso-2533:geometric-altitude
+                        iso-2533:geopotential-altitude
+                        iso-2533:flight-level
+                        iso-2533:density
+                        iso-2533:specific-weight
+                        iso-2533:pressure-scale-height
+                        iso-2533:number-density
+                        iso-2533:mean-speed
+                        iso-2533:mean-free-path
+                        iso-2533:collision-frequency
+                        iso-2533:speed-of-sound
+                        iso-2533:dynamic-viscosity
+                        iso-2533:kinematic-viscosity
+                        iso-2533:thermal-conductivity)))
       (doc-dir (merge-pathnames
-		(make-pathname :directory '(:relative "doc"))
-		(asdf:system-source-directory "iso-2533"))))
+                (make-pathname :directory '(:relative "doc"))
+                (asdf:system-source-directory "iso-2533"))))
   (generate-doc
    :data data
    :output-format :html

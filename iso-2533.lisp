@@ -84,8 +84,8 @@ is required to utilize the value 8.31432.")
   (defconst molar-mass (progn
                          #+iso-2533-derived-quantities
                          (* (/ (* standard-temperature
-	                          standard-density)
-	                       standard-pressure)
+                                  standard-density)
+                               standard-pressure)
                             molar-gas-constant)
                          #-iso-2533-derived-quantities
                          0.02896442)
@@ -95,32 +95,32 @@ Value is 0.02896442 kg/mol.")
 
   (defconst specific-gas-constant (progn
                                     #+iso-2533-derived-quantities
-				    (/ molar-gas-constant
-				       molar-mass)
+                                    (/ molar-gas-constant
+                                       molar-mass)
                                     #-iso-2533-derived-quantities
-				    287.05287)
+                                    287.05287)
     "Specific gas constant of dry air in joule per kilogram kelvin.
 
 Value is 287.05287 J/kg/K.")
   #+()
   (and (= (coerce (* (/ (* 28815/100
-			   1225/1000)
-			101325)
-		     831432/100000)
-		  'double-float)
-	  (* (/ (* standard-temperature
-		   standard-density)
-		standard-pressure)
-	     molar-gas-constant))
+                           1225/1000)
+                        101325)
+                     831432/100000)
+                  'double-float)
+          (* (/ (* standard-temperature
+                   standard-density)
+                standard-pressure)
+             molar-gas-constant))
        (= (coerce (/ 101325
-		     (* 28815/100
-			1225/1000))
-		  'double-float)
-	  (/ standard-pressure
-	     (* standard-temperature
-		standard-density))
-	  (/ molar-gas-constant
-	     molar-mass)))
+                     (* 28815/100
+                        1225/1000))
+                  'double-float)
+          (/ standard-pressure
+             (* standard-temperature
+                standard-density))
+          (/ molar-gas-constant
+             molar-mass)))
 
   (defconst ratio-of-specific-heats 1.4
     "Ratio of specific heats of dry air.
@@ -154,67 +154,61 @@ Fourth argument L is the lapse rate in kelvin per meter.
 Value is the ratio of the air pressure to the air pressure at base level."
     (let ((dH (- H Hb)))
       (cond ((zerop dH)
-	     1)
-	    ((zerop L)
-	     (exp (- (* (/ gn (* R Tb)) dH))))
-	    (t
-	     (expt (+ 1 (* (/ L Tb) dH)) (- (/ gn (* L R))))))))
+             1)
+            ((zerop L)
+             (exp (- (* (/ gn (* R Tb)) dH))))
+            (t
+             (expt (+ 1 (* (/ L Tb) dH)) (- (/ gn (* L R))))))))
 
-  (defclass layer ()
-    ((altitude
-      :initarg :altitude
-      :type double-float
-      :documentation "Geopotential altitude at base level in meter.")
-     (pressure
-      :initarg :pressure
-      :type double-float
-      :documentation "Air pressure at base level in pascal.")
-     (temperature
-      :initarg :temperature
-      :type double-float
-      :documentation "Air temperature at base level in kelvin.")
-     (lapse-rate
-      :initarg :lapse-rate
-      :type double-float
-      :documentation "Air temperature lapse rate in kelvin per meter.")))
+  (defstruct (layer
+              (:constructor %make-layer)
+              (:predicate nil)
+              (:copier nil))
+    ;; Geopotential altitude at base level in meter."
+    (altitude 0.0 :type double-float)
+    ;; Air pressure at base level in pascal.
+    (pressure 0.0 :type double-float)
+    ;; Air temperature at base level in kelvin.
+    (temperature 0.0 :type double-float)
+    ;; Air temperature lapse rate in kelvin per meter.
+    (lapse-rate 0.0 :type double-float))
 
   ;; Make Clozure Common Lisp happy.
   (defmethod make-load-form ((object layer) &optional environment)
     (make-load-form-saving-slots object :environment environment))
 
   (defconst layers (labels ((make-layer (Hb Tb L &optional neighbor)
-			      ;; Air pressure at base level.
-			      (let ((pb (if (not neighbor)
-					    standard-pressure
-					  (with-slots ((Hn altitude)
-						       (pn pressure)
-						       (Tn temperature)
-						       (Ln lapse-rate)) neighbor
-					    (if (> Hb Hn)
-						(* pn (p/pb Hb Hn Tn Ln))
-					      (/ pn (p/pb Hn Hb Tb L)))))))
-				(make-instance 'layer
-				               :altitude Hb
-				               :pressure pb
-				               :temperature Tb
-				               :lapse-rate L))))
-		     (let (b (n (make-layer     0.0 288.15 -0.0065)))
-		       (vector
-			#+iso-2533-addendum-2
-			(setf b (make-layer -5000.0 320.65 -0.0065 n))
-			#-iso-2533-addendum-2
-			(setf b (make-layer -2000.0 301.15 -0.0065 n))
-			n
-			(setf b (make-layer 11000.0 216.65  0.0    n))
-			(setf b (make-layer 20000.0 216.65  0.001  b))
-			(setf b (make-layer 32000.0 228.65  0.0028 b))
-			(setf b (make-layer 47000.0 270.65  0.0    b))
-			(setf b (make-layer 51000.0 270.65 -0.0028 b))
-			(setf b (make-layer 71000.0 214.65 -0.002  b))
-			;; The mesopause starts at approximately 85 km.
-			;; Therefore, continue with the lapse rate of
-			;; the mesophere.
-			(setf b (make-layer 80000.0 196.65 -0.002  b)))))
+                              ;; Air pressure at base level.
+                              (let ((pb (if (not neighbor)
+                                            standard-pressure
+                                          (let ((Hn (layer-altitude neighbor))
+                                                (pn (layer-pressure neighbor))
+                                                (Tn (layer-temperature neighbor))
+                                                (Ln (layer-lapse-rate neighbor)))
+                                            (if (> Hb Hn)
+                                                (* pn (p/pb Hb Hn Tn Ln))
+                                              (/ pn (p/pb Hn Hb Tb L)))))))
+                                (%make-layer :altitude Hb
+                                             :pressure pb
+                                             :temperature Tb
+                                             :lapse-rate L))))
+                     (let (b (n (make-layer     0.0 288.15 -0.0065)))
+                       (vector
+                        #+iso-2533-addendum-2
+                        (setf b (make-layer -5000.0 320.65 -0.0065 n))
+                        #-iso-2533-addendum-2
+                        (setf b (make-layer -2000.0 301.15 -0.0065 n))
+                        n
+                        (setf b (make-layer 11000.0 216.65  0.0    n))
+                        (setf b (make-layer 20000.0 216.65  0.001  b))
+                        (setf b (make-layer 32000.0 228.65  0.0028 b))
+                        (setf b (make-layer 47000.0 270.65  0.0    b))
+                        (setf b (make-layer 51000.0 270.65 -0.0028 b))
+                        (setf b (make-layer 71000.0 214.65 -0.002  b))
+                        ;; The mesopause starts at approximately 85 km.
+                        ;; Therefore, continue with the lapse rate of
+                        ;; the mesophere.
+                        (setf b (make-layer 80000.0 196.65 -0.002  b)))))
     "Sequence of atmosphere layers in increasing order of altitude.")
   (values))
 
@@ -223,16 +217,16 @@ Value is the ratio of the air pressure to the air pressure at base level."
 
 ;; Add one permille so that we can also calculate air properties for
 ;; the geometric altitude down at this level.
-(defconst minimum-geopotential-altitude (fround (* (slot-value (svref layers 0) 'altitude) 1.001))
+(defconst minimum-geopotential-altitude (fround (* (layer-altitude (svref layers 0)) 1.001))
   "Minimum geopotential altitude in meter.")
 
-(defconst maximum-geopotential-altitude (slot-value (svref layers last-layer-index) 'altitude)
+(defconst maximum-geopotential-altitude (layer-altitude (svref layers last-layer-index))
   "Maximum geopotential altitude in meter.")
 
-(defconst minimum-pressure-altitude (slot-value (svref layers last-layer-index) 'pressure)
+(defconst minimum-pressure-altitude (layer-pressure (svref layers last-layer-index))
   "Minimum pressure altitude in pascal.")
 
-(defconst maximum-pressure-altitude (slot-value (svref layers 0) 'pressure)
+(defconst maximum-pressure-altitude (layer-pressure (svref layers 0))
   "Maximum pressure altitude in pascal.")
 
 (defun find-layer (H)
@@ -240,26 +234,26 @@ Value is the ratio of the air pressure to the air pressure at base level."
 
 Argument H is the geopotential altitude in meter."
   (ensure-type H `(real ,minimum-geopotential-altitude
-			,maximum-geopotential-altitude))
+                        ,maximum-geopotential-altitude))
   (svref layers (iter (for j :from 1 :to last-layer-index)
-		      (for layer = (svref layers j))
-		      (when (< H (slot-value layer 'altitude))
-			(return (1- j)))
-		      (finally
-		       (return last-layer-index)))))
+                      (for layer = (svref layers j))
+                      (when (< H (layer-altitude layer))
+                        (return (1- j)))
+                      (finally
+                       (return last-layer-index)))))
 
 (defun find-layer* (p)
   "Return layer object for a given pressure altitude.
 
 Argument P is the air pressure in pascal."
   (ensure-type p `(real ,minimum-pressure-altitude
-			,maximum-pressure-altitude))
+                        ,maximum-pressure-altitude))
   (svref layers (iter (for j :from 1 :to last-layer-index)
-		      (for layer = (svref layers j))
-		      (when (> p (slot-value layer 'pressure))
-			(return (1- j)))
-		      (finally
-		       (return last-layer-index)))))
+                      (for layer = (svref layers j))
+                      (when (> p (layer-pressure layer))
+                        (return (1- j)))
+                      (finally
+                       (return last-layer-index)))))
 
 (defun atm (geopotential-altitude &optional (temperature-offset 0))
   "Calculate air pressure and air temperature as a function of altitude.
@@ -273,11 +267,11 @@ Optional second argument TEMPERATURE-OFFSET is the temperature offset
 Values are the air pressure in pascal and the air temperature in
 kelvin."
   (let* ((H geopotential-altitude)
-	 (layer (find-layer H)))
-    (with-slots ((Hb altitude)
-		 (pb pressure)
-		 (Tb temperature)
-		 (L  lapse-rate)) layer
+         (layer (find-layer H)))
+    (let ((Hb (layer-altitude layer))
+          (pb (layer-pressure layer))
+          (Tb (layer-temperature layer))
+          (L  (layer-lapse-rate layer)))
       (values
        ;; Air pressure.
        (* pb (p/pb H Hb Tb L))
@@ -294,18 +288,18 @@ Value is the geopotential altitude in meter.
 
 The ‘pressure-altitude’ function is the inverse of the ‘atm’ function."
   (let* ((p pressure)
-	 (layer (find-layer* p)))
-    (with-slots ((Hb altitude)
-		 (pb pressure)
-		 (Tb temperature)
-		 (L  lapse-rate)) layer
+         (layer (find-layer* p)))
+    (let ((Hb (layer-altitude layer))
+          (pb (layer-pressure layer))
+          (Tb (layer-temperature layer))
+          (L  (layer-lapse-rate layer)))
       (cond ((= p pb)
-	     Hb)
-	    ((zerop L)
-	     (- Hb (* (/ (* R Tb) gn) (log (/ p pb)))))
-	    (t
-	     (+ Hb (* (/ Tb L) (- (exp (- (* (/ (* L R) gn) (log (/ p pb))))) 1)))
-	     )))))
+             Hb)
+            ((zerop L)
+             (- Hb (* (/ (* R Tb) gn) (log (/ p pb)))))
+            (t
+             (+ Hb (* (/ Tb L) (- (exp (- (* (/ (* L R) gn) (log (/ p pb))))) 1)))
+             )))))
 
 (defun acceleration-of-gravity (geometric-altitude)
   "Calculate acceleration of gravity as a function of altitude.
@@ -382,7 +376,7 @@ air temperature as a function of the geometric altitude."
     (declare (ignorable pressure))
     (unless temperature-supplied-p
       (multiple-value-setq (pressure temperature)
-	(atm (geopotential-altitude geometric-altitude)))))
+        (atm (geopotential-altitude geometric-altitude)))))
   (/ (* R temperature) (acceleration-of-gravity geometric-altitude)))
 
 (defun number-density (pressure temperature)

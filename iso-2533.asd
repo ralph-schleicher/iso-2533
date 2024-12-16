@@ -43,8 +43,10 @@
   :depends-on ("iterate")
   :serial t
   :components ((:file "packages")
+               (:file "backup")
                (:file "common")
-               (:file "iso-2533")))
+               (:file "iso-2533")
+               (:file "restore")))
 
 (defsystem "iso-2533/tables"
   :description "International standard atmosphere."

@@ -39,7 +39,6 @@
   (setf *read-default-float-format* 'double-float))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-
   (defconst standard-acceleration-of-gravity 9.80665
     "Standard acceleration of gravity at sea level in meter per square second.
 
@@ -192,68 +191,75 @@ Value is the ratio of the air pressure to the air pressure at base level."
                                              :pressure pb
                                              :temperature Tb
                                              :lapse-rate L))))
-                     (let (b (n (make-layer     0.0 288.15 -0.0065)))
-                       (vector
-                        #+iso-2533-addendum-2
-                        (setf b (make-layer -5000.0 320.65 -0.0065 n))
-                        #-iso-2533-addendum-2
-                        (setf b (make-layer -2000.0 301.15 -0.0065 n))
-                        n
-                        (setf b (make-layer 11000.0 216.65  0.0    n))
-                        (setf b (make-layer 20000.0 216.65  0.001  b))
-                        (setf b (make-layer 32000.0 228.65  0.0028 b))
-                        (setf b (make-layer 47000.0 270.65  0.0    b))
-                        (setf b (make-layer 51000.0 270.65 -0.0028 b))
-                        (setf b (make-layer 71000.0 214.65 -0.002  b))
-                        ;; The mesopause starts at approximately 85 km.
-                        ;; Therefore, continue with the lapse rate of
-                        ;; the mesophere.
-                        (setf b (make-layer 80000.0 196.65 -0.002  b)))))
-    "Sequence of atmosphere layers in increasing order of altitude.")
-  (values))
+                     (let* ((n (make-layer 0.0 288.15 -0.0065))
+                            (z (progn
+                                 #+iso-2533-addendum-2
+                                 (make-layer -5000.0 320.65 -0.0065 n)
+                                 #-iso-2533-addendum-2
+                                 (make-layer -2000.0 301.15 -0.0065 n)))
+                            (a (make-layer 11000.0 216.65  0.0    n))
+                            (b (make-layer 20000.0 216.65  0.001  a))
+                            (c (make-layer 32000.0 228.65  0.0028 b))
+                            (d (make-layer 47000.0 270.65  0.0    c))
+                            (e (make-layer 51000.0 270.65 -0.0028 d))
+                            (f (make-layer 71000.0 214.65 -0.002  e))
+                            ;; The mesopause starts at approximately 85 km.
+                            ;; Therefore, continue with the lapse rate of
+                            ;; the mesophere.
+                            (g (make-layer 80000.0 196.65 -0.002  f)))
+                       ;; Value is a simple vector.
+                       (vector z n a b c d e f g)))
+    "A simple vector of atmosphere layers in increasing order of altitude.")
 
-(defconst last-layer-index (1- (length layers))
-  "Index of the last atmosphere layer.")
+  (defconst last-layer-index (1- (length layers))
+    "Index of the last atmosphere layer.")
 
-;; Add one permille so that we can also calculate air properties for
-;; the geometric altitude down at this level.
-(defconst minimum-geopotential-altitude (fround (* (layer-altitude (svref layers 0)) 1.001))
-  "Minimum geopotential altitude in meter.")
+  ;; Add one permille so that we can also calculate air properties for
+  ;; the geometric altitude down at this level.
+  (defconst minimum-geopotential-altitude (fround (* (layer-altitude (svref layers 0)) 1.001))
+    "Minimum geopotential altitude in meter.")
 
-(defconst maximum-geopotential-altitude (layer-altitude (svref layers last-layer-index))
-  "Maximum geopotential altitude in meter.")
+  (defconst maximum-geopotential-altitude (layer-altitude (svref layers last-layer-index))
+    "Maximum geopotential altitude in meter.")
 
-(defconst minimum-pressure-altitude (layer-pressure (svref layers last-layer-index))
-  "Minimum pressure altitude in pascal.")
+  (defconst minimum-pressure-altitude (layer-pressure (svref layers last-layer-index))
+    "Minimum pressure altitude in pascal.")
 
-(defconst maximum-pressure-altitude (layer-pressure (svref layers 0))
-  "Maximum pressure altitude in pascal.")
+  (defconst maximum-pressure-altitude (layer-pressure (svref layers 0))
+    "Maximum pressure altitude in pascal.")
 
-(defun find-layer (H)
-  "Return layer object for a given geopotential altitude.
+  (macrolet ((generate ()
+               `(defun %find-layer (H)
+                  "Return the base layer for a given geopotential altitude.
 
-Argument H is the geopotential altitude in meter."
-  (ensure-type H `(real ,minimum-geopotential-altitude
-                        ,maximum-geopotential-altitude))
-  (svref layers (iter (for j :from 1 :to last-layer-index)
-                      (for layer = (svref layers j))
-                      (when (< H (layer-altitude layer))
-                        (return (1- j)))
-                      (finally
-                       (return last-layer-index)))))
+Argument H is the geopotential altitude in meter in the range from
+ ‘minimum-geopotential-altitude’ to ‘maximum-geopotential-altitude’
+ inclusive.
 
-(defun find-layer* (p)
-  "Return layer object for a given pressure altitude.
+Return value is a ‘layer’ object."
+                  (declare (type real H))
+                  (cond ,@(iter (for j :from 1 :to last-layer-index)
+                                (collect `((< H (layer-altitude (svref layers ,j)))
+                                           (svref layers ,(1- j)))))
+                        (t (svref layers ,last-layer-index))))))
+    (generate))
 
-Argument P is the air pressure in pascal."
-  (ensure-type p `(real ,minimum-pressure-altitude
-                        ,maximum-pressure-altitude))
-  (svref layers (iter (for j :from 1 :to last-layer-index)
-                      (for layer = (svref layers j))
-                      (when (> p (layer-pressure layer))
-                        (return (1- j)))
-                      (finally
-                       (return last-layer-index)))))
+  (macrolet ((generate ()
+               `(defun %find-layer-by-pressure (p)
+                  "Return the base layer for a given pressure altitude.
+
+Argument P is the air pressure in pascal in the range from
+ ‘minimum-pressure-altitude’ to ‘maximum-pressure-altitude’
+ inclusive.
+
+Return value is a ‘layer’ object."
+                  (declare (type real p))
+                  (cond ,@(iter (for j :from 1 :to last-layer-index)
+                                (collect `((> p (layer-pressure (svref layers ,j)))
+                                           (svref layers ,(1- j)))))
+                        (t (svref layers ,last-layer-index))))))
+    (generate))
+  ()) ;eval-when
 
 (defun atm (geopotential-altitude &optional (temperature-offset 0))
   "Calculate air pressure and air temperature as a function of altitude.
@@ -266,8 +272,9 @@ Optional second argument TEMPERATURE-OFFSET is the temperature offset
 
 Values are the air pressure in pascal and the air temperature in
 kelvin."
-  (let* ((H geopotential-altitude)
-         (layer (find-layer H)))
+  (let* ((H (ensure-type geopotential-altitude `(real ,minimum-geopotential-altitude
+                                                      ,maximum-geopotential-altitude)))
+         (layer (%find-layer H)))
     (let ((Hb (layer-altitude layer))
           (pb (layer-pressure layer))
           (Tb (layer-temperature layer))
@@ -287,8 +294,9 @@ Argument PRESSURE is the air pressure in pascal.
 Value is the geopotential altitude in meter.
 
 The ‘pressure-altitude’ function is the inverse of the ‘atm’ function."
-  (let* ((p pressure)
-         (layer (find-layer* p)))
+  (let* ((p (ensure-type pressure `(real ,minimum-pressure-altitude
+                                         ,maximum-pressure-altitude)))
+         (layer (%find-layer-by-pressure p)))
     (let ((Hb (layer-altitude layer))
           (pb (layer-pressure layer))
           (Tb (layer-temperature layer))
@@ -472,8 +480,5 @@ formula:
 where T is the temperature."
   (/ (* 2.648151E-3 (expt temperature 3/2))
      (+ temperature (* 245.4 (expt 10 (/ -12 temperature))))))
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (setf *read-default-float-format* 'single-float))
 
 ;;; iso-2533.lisp ends here
